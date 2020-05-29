@@ -1,5 +1,5 @@
 # Sistema
-<p>Sistema desenvolvido, para calcular uma divida com juros composto e simples!</p>
+<p>Sistema desenvolvido, para calcular uma divida com juros compostos e simples!</p>
 ##Iniciando
 <p>Os próximos tópicos o guiarão para que você tenha uma cópia deste projeto em sua máquina local funcionando, pronto para desenvolver e executar testes.<p>
 
@@ -25,10 +25,8 @@
 
 ```"DatabaseConection": "User ID =postgres;Password=senha;Server=localhost;Port=5432;Database=paschoalotto;Integrated Security=true;Pooling=true;"```
 
-<p>Para criar as tabelas no banco de dados você deve ir na  pasta schemadb e copiar o sql e executar no postgres.</p>
+<p>Para criar as tabelas no banco de dados você deve ir na  pasta schemadb e copiar o SQL e executar no postgres.</p>
 
-<p>  Com programa restaurado  e banco de dados configurado, rode o comando abaxio para iniciar o sistema<p>
+<p>  Com programa restaurado e banco de dados configurado, rode o comando abaixo para iniciar o sistema<p>
 
 ```dotnet run```
-
-## Apis
