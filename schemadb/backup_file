@@ -1,0 +1,371 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: boletos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.boletos (
+    id integer NOT NULL,
+    id_contrato uuid,
+    valor_original numeric,
+    lucro_paschoalotto numeric,
+    valor_juros numeric,
+    valor_final numeric,
+    valor_parcela numeric,
+    qtd_parcela integer,
+    parcela_atual character varying(3),
+    data_vencimento timestamp without time zone,
+    pago boolean,
+    id_boleto uuid,
+    dias_atraso integer,
+    cancelado boolean DEFAULT false
+);
+
+
+ALTER TABLE public.boletos OWNER TO postgres;
+
+--
+-- Name: boletos_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.boletos_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.boletos_id_seq OWNER TO postgres;
+
+--
+-- Name: boletos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.boletos_id_seq OWNED BY public.boletos.id;
+
+
+--
+-- Name: colaboradorlogin; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.colaboradorlogin (
+    id integer NOT NULL,
+    usuario character varying(255),
+    senha text,
+    role character varying(20)
+);
+
+
+ALTER TABLE public.colaboradorlogin OWNER TO postgres;
+
+--
+-- Name: configuracaotaxas_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.configuracaotaxas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.configuracaotaxas_id_seq OWNER TO postgres;
+
+--
+-- Name: configuracaotaxas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.configuracaotaxas (
+    id integer DEFAULT nextval('public.configuracaotaxas_id_seq'::regclass) NOT NULL,
+    porcentagem_comissao double precision,
+    qtd_maxima_parcelas integer,
+    juros_porcetagem numeric,
+    juros_simples boolean,
+    juros_composto boolean
+);
+
+
+ALTER TABLE public.configuracaotaxas OWNER TO postgres;
+
+--
+-- Name: contrato; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.contrato (
+    id_contrato uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    valor numeric,
+    data_vencimento timestamp without time zone,
+    juros_composto boolean DEFAULT false,
+    juros_simples boolean DEFAULT false,
+    nome character varying(255),
+    documento character varying(18),
+    telefone character varying(20),
+    data_nascimento character varying(10),
+    email text,
+    cep character varying(9),
+    logradouro character varying(255),
+    complemento character varying(255),
+    bairro character varying(255),
+    cidade character varying(255),
+    uf character varying(2),
+    numero character varying(10),
+    divida_finalizada boolean DEFAULT false
+);
+
+
+ALTER TABLE public.contrato OWNER TO postgres;
+
+--
+-- Name: contrato_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.contrato_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.contrato_id_seq OWNER TO postgres;
+
+--
+-- Name: myseq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.myseq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.myseq OWNER TO postgres;
+
+--
+-- Name: seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq OWNER TO postgres;
+
+--
+-- Name: usuariologin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.usuariologin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.usuariologin_id_seq OWNER TO postgres;
+
+--
+-- Name: usuariologin; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.usuariologin (
+    id integer DEFAULT nextval('public.usuariologin_id_seq'::regclass) NOT NULL,
+    usuario character varying(255),
+    senha text,
+    role character varying(20),
+    email text,
+    nome text,
+    documento character varying(18)
+);
+
+
+ALTER TABLE public.usuariologin OWNER TO postgres;
+
+--
+-- Name: boletos id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletos ALTER COLUMN id SET DEFAULT nextval('public.boletos_id_seq'::regclass);
+
+
+--
+-- Data for Name: boletos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.boletos (id, id_contrato, valor_original, lucro_paschoalotto, valor_juros, valor_final, valor_parcela, qtd_parcela, parcela_atual, data_vencimento, pago, id_boleto, dias_atraso, cancelado) FROM stdin;
+1453	c7bfdc2d-f83b-4f20-ac5f-66f377d910e6	3000	303.6	36	3036	1012	3	1/3	2020-05-25 13:34:00	t	57db24d3-1706-496c-a407-76951170a148	6	f
+1454	c7bfdc2d-f83b-4f20-ac5f-66f377d910e6	3000	303.6	36	3036	1012	3	2/3	2020-06-25 13:34:00	t	30ac29bb-1e33-479e-9479-7df36f0bea12	6	f
+1455	c7bfdc2d-f83b-4f20-ac5f-66f377d910e6	3000	303.6	36	3036	1012	3	3/3	2020-07-25 13:34:00	t	de4f23ff-97e7-4a73-abd0-c8a0a3a9e639	6	f
+\.
+
+
+--
+-- Data for Name: colaboradorlogin; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.colaboradorlogin (id, usuario, senha, role) FROM stdin;
+1	jessica.pereira	123456	colaborador
+\.
+
+
+--
+-- Data for Name: configuracaotaxas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.configuracaotaxas (id, porcentagem_comissao, qtd_maxima_parcelas, juros_porcetagem, juros_simples, juros_composto) FROM stdin;
+2	10	3	0.2	t	f
+1	10	5	0.2	f	t
+\.
+
+
+--
+-- Data for Name: contrato; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.contrato (id_contrato, valor, data_vencimento, juros_composto, juros_simples, nome, documento, telefone, data_nascimento, email, cep, logradouro, complemento, bairro, cidade, uf, numero, divida_finalizada) FROM stdin;
+c7bfdc2d-f83b-4f20-ac5f-66f377d910e6	3000	2020-05-19 20:38:40	f	t	Gilda Maria Scalfi Carvalho	170.428.328.09	14998134765	21/03/1998	gabriel@scalfi.com	17013-290	Rua tupy	casa	Vila Cardia	Bauru	SP	1-30	t
+01f74c50-ff8b-47a7-bd88-862d3081a19d	3000	2020-05-18 20:38:40	t	f	Gabriel Scalfi Carvalho	464.243.668-57	14998134765	21/03/1998	gabriel@scalfi.com	17013-290	Rua tupy	casa	Vila Cardia	Bauru	SP	1-30	f
+\.
+
+
+--
+-- Data for Name: usuariologin; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.usuariologin (id, usuario, senha, role, email, nome, documento) FROM stdin;
+2	gabriel.scalfi	8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92	cliente	gabriel@scalfi.carvalho	Gabriel	464.243.668-57
+3	jhony	8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92	cliente	jhony@hotmail.com	gabriel	161.009.696-70
+5	Daniel	8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92	cliente	daniel@gmail.com	Daniel Tiago da Luz	996.505.655-23
+6	Gabriel@gmail.com	2a64bb2ff021da4ab082839d47edd94b49d8e226c90489286af52480b050292f	cliente	Gabriel@gmail.com	Scalfi	45665465465
+7	gilda	8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92	cliente	gilda@gmail.com	Gilda Scalfi Carvalho	170.428.328.09
+\.
+
+
+--
+-- Name: boletos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.boletos_id_seq', 1455, true);
+
+
+--
+-- Name: configuracaotaxas_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.configuracaotaxas_id_seq', 1, false);
+
+
+--
+-- Name: contrato_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.contrato_id_seq', 1, false);
+
+
+--
+-- Name: myseq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.myseq', 1, false);
+
+
+--
+-- Name: seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.seq', 1, false);
+
+
+--
+-- Name: usuariologin_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.usuariologin_id_seq', 7, true);
+
+
+--
+-- Name: boletos boletos_id_boleto_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletos
+    ADD CONSTRAINT boletos_id_boleto_key UNIQUE (id_boleto);
+
+
+--
+-- Name: contrato contrato_id_contrato_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contrato
+    ADD CONSTRAINT contrato_id_contrato_key PRIMARY KEY (id_contrato);
+
+
+--
+-- Name: boletos id_contrato; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.boletos
+    ADD CONSTRAINT id_contrato FOREIGN KEY (id_contrato) REFERENCES public.contrato(id_contrato) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

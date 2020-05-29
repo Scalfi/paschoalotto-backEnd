@@ -19,8 +19,6 @@ namespace Paschoalotto.Services
 
         public static double CalculaJurosComposto(ConfiguracaoTaxas config, Contrato contrato, DateTime DiaPagamento)
         {
-            var date = contrato.Data_vencimento - DateTime.Now;
-
             return contrato.Valor * (Math.Pow((1 + (config.JurosPorcetagem / 100)), ( DiaPagamento.Date - contrato.Data_vencimento.Date).Days));
 
         }

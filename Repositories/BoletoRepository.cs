@@ -117,7 +117,7 @@ namespace Paschoalotto.Repositories
             else
             {
                 config = await _configuracaoTaxasRepository.GetConfigCompostoAsync();
-                valorTotal = CalculaJurosService.CalculaJurosSimples(config, contrato, geraBoleto.DataPrimeiroPagamento);
+                valorTotal = CalculaJurosService.CalculaJurosComposto(config, contrato, geraBoleto.DataPrimeiroPagamento);
 
             }
 
